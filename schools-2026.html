@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="uk">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- SEO Meta Tags -->
+    <title>Зимова та Весняна школи - 2026 | НМТ Resources</title>
+    <meta name="description" content="Матеріали проєкту «Зимова та Весняна школи - 2026» для педагогічних працівників.">
+    <meta name="keywords" content="НМТ, зимова школа, весняна школа, педагогічні працівники, методичні матеріали">
+    <meta name="author" content="НМТ Resources">
+    <meta name="robots" content="index, follow">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="uk_UA">
+    <meta property="og:title" content="Зимова та Весняна школи - 2026">
+    <meta property="og:description"
+        content="Матеріали проєкту «Зимова та Весняна школи - 2026» для педагогічних працівників.">
+    <meta property="og:site_name" content="НМТ Resources">
+
+    <!-- Favicon SVG -->
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>❄️</text></svg>">
+
+    <link rel="stylesheet" href="styles.css?v=20251211">
+    <style>
+        /* Thematic Styles for Winter/Spring Schools */
+        .hero-schools {
+            background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
+            /* Icy blue gradient */
+            color: #1a365d;
+            /* Dark blue text for contrast */
+        }
+
+        .hero-schools .hero-title,
+        .hero-schools .hero-subtitle,
+        .hero-schools .hero-badge {
+            color: #1a365d;
+            text-shadow: none;
+        }
+
+        .hero-schools .hero-badge {
+            background: rgba(255, 255, 255, 0.6);
+        }
+
+        .resource-card-school {
+            border-left: 4px solid #4396BA;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .resource-card-school:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .school-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header" role="banner">
+        <div class="header-content">
+            <div class="header-top">
+                <div>
+                    <a href="educators.html" class="back-link">← Назад до розділу для педагогів</a>
+                    <h1 class="header-title">
+                        <a href="index.html"
+                            style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 12px;">
+                            <img src="logo_zoippo.png" alt="Logo" class="header-logo"
+                                style="height: 60px; width: auto; object-fit: contain;">
+                            <span>Запорізький обласний інститут післядипломної педагогічної освіти</span>
+                        </a>
+                    </h1>
+                </div>
+                <button class="theme-toggle" id="themeToggle" aria-label="Перемкнути тему"
+                    title="Перемкнути світлу/темну тему">
+                    <span id="themeIcon" aria-hidden="true">🌙</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero hero-schools" aria-label="Банер сторінки">
+        <div class="hero-content">
+            <div class="hero-badge">Проєкт</div>
+            <h2 class="hero-title">Зимова та Весняна школи - 2026</h2>
+            <p class="hero-subtitle">
+                Цикл навчальних та методичних заходів для професійного розвитку педагогів.
+            </p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="resources-grid">
+
+            <!-- Program 1: Mathematics -->
+            <article class="resource-card resource-card-school">
+                <span class="school-icon">📐</span>
+                <h3 class="resource-title">Освітня програма "Математика. Підготовка до НМТ: практичний курс"</h3>
+                <p class="resource-description">
+                    Комплексна програма підготовки викладачів математики до ефективної роботи з учнями.
+                </p>
+                <div class="resource-actions">
+                    <a href="https://drive.google.com/file/d/1uRyOLGaNQz5ki1kR1dLUrI63b-Le1jdv/view?usp=drive_link"
+                        target="_blank" class="btn btn--primary">
+                        Переглянути програму
+                    </a>
+                </div>
+            </article>
+
+            <!-- Program 2: History of Ukraine -->
+            <article class="resource-card resource-card-school">
+                <span class="school-icon">📜</span>
+                <h3 class="resource-title">Освітня програма "Узагальнюючий курс історії України (підготовка до ЗНО/НМТ)"
+                </h3>
+                <p class="resource-description">
+                    Методичні рекомендації та структурування матеріалу для викладання історії України.
+                </p>
+                <div class="resource-actions">
+                    <a href="https://drive.google.com/file/d/1XM0DkYYLTDwZohIVXtOgMAD9Ie8d1yzf/view?usp=drive_link"
+                        target="_blank" class="btn btn--primary">
+                        Переглянути програму
+                    </a>
+                </div>
+            </article>
+
+            <!-- Program 3: Ukrainian Language -->
+            <article class="resource-card resource-card-school">
+                <span class="school-icon">📖</span>
+                <h3 class="resource-title">Освітня програма "Українська мова: підготовка до НМТ"</h3>
+                <p class="resource-description">
+                    Сучасні підходи до викладання української мови та підготовки до тестування.
+                </p>
+                <div class="resource-actions">
+                    <a href="https://drive.google.com/file/d/1plclwzNv16M7KKns_QfSPssGCobuMBDY/view?usp=drive_link"
+                        target="_blank" class="btn btn--primary">
+                        Переглянути програму
+                    </a>
+                </div>
+            </article>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p class="footer-text">
+                © 2026 НМТ Resources. Усі матеріали зібрані з відкритих джерел.
+                <br>
+                Офіційна інформація: <a href="https://testportal.gov.ua" target="_blank" rel="noopener noreferrer"
+                    class="footer-link">testportal.gov.ua</a>
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Theme functionality
+        function initTheme() {
+            let theme = 'light';
+            try {
+                const saved = localStorage.getItem('nmt-theme');
+                if (saved) {
+                    theme = saved;
+                } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    theme = 'dark';
+                }
+            } catch (e) {
+                console.warn('Не вдалося завантажити тему:', e);
+            }
+            applyTheme(theme);
+        }
+
+        function applyTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            const themeIcon = document.getElementById('themeIcon');
+            if (themeIcon) {
+                themeIcon.textContent = theme === 'dark' ? '☀️' : '🌙';
+            }
+        }
+
+        function toggleTheme() {
+            const current = document.documentElement.getAttribute('data-theme');
+            const next = current === 'dark' ? 'light' : 'dark';
+            applyTheme(next);
+            try {
+                localStorage.setItem('nmt-theme', next);
+            } catch (e) {
+                console.warn('Не вдалося зберегти тему:', e);
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            initTheme();
+            document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+        });
+    </script>
+    <script src="animations.js"></script>
+</body>
+
+</html>

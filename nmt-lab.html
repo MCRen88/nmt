@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="uk">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- SEO Meta Tags -->
+    <title>НМТ-lab: методичні лайфхаки для вчителів - Підготовка до НМТ</title>
+    <meta name="description"
+        content="Педагогічний інтенсив НМТ-lab: методичні лайфхаки для вчителів. Практичні поради та методичні прийоми для підвищення ефективності підготовки учнів.">
+    <meta name="keywords" content="НМТ, НМТ-lab, методичні лайфхаки, вчителі, педагогічний інтенсив, підготовка до НМТ">
+    <meta name="author" content="НМТ Resources">
+    <meta name="robots" content="index, follow">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="uk_UA">
+    <meta property="og:title" content="НМТ-lab: методичні лайфхаки для вчителів">
+    <meta property="og:description"
+        content="Педагогічний інтенсив НМТ-lab: методичні лайфхаки для вчителів. Практичні поради та методичні прийоми.">
+    <meta property="og:site_name" content="НМТ Resources">
+
+    <!-- Favicon SVG -->
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💡</text></svg>">
+
+    <link rel="stylesheet" href="styles.css?v=20251223">
+    <style>
+        /* Table Styles */
+        .events-section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .events-table-wrapper {
+            overflow-x: auto;
+            border-radius: 16px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+        }
+
+        .events-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .events-table th,
+        .events-table td {
+            padding: 0.75rem 0.5rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+            word-wrap: break-word;
+        }
+
+        /* Column widths - proportional */
+        .events-table th:nth-child(1),
+        .events-table td:nth-child(1) {
+            width: 3%;
+            text-align: center;
+        }
+
+        /* № */
+        .events-table th:nth-child(2),
+        .events-table td:nth-child(2) {
+            width: 8%;
+        }
+
+        /* Дата */
+        .events-table th:nth-child(3),
+        .events-table td:nth-child(3) {
+            width: 14%;
+        }
+
+        /* Категорія */
+        .events-table th:nth-child(4),
+        .events-table td:nth-child(4) {
+            width: 10%;
+        }
+
+        /* Формат */
+        .events-table th:nth-child(5),
+        .events-table td:nth-child(5) {
+            width: 25%;
+        }
+
+        /* Місце */
+        .events-table th:nth-child(6),
+        .events-table td:nth-child(6) {
+            width: 25%;
+        }
+
+        /* Спікер */
+        .events-table th:nth-child(7),
+        .events-table td:nth-child(7) {
+            width: 15%;
+            text-align: center;
+        }
+
+        /* Реєстрація */
+
+        .events-table th {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            position: sticky;
+            top: 0;
+        }
+
+        .events-table th:first-child {
+            border-radius: 16px 0 0 0;
+        }
+
+        .events-table th:last-child {
+            border-radius: 0 16px 0 0;
+        }
+
+        .events-table tbody tr {
+            transition: background 0.2s ease;
+        }
+
+        .events-table tbody tr:hover {
+            background: var(--hover-bg);
+        }
+
+        .events-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .events-table td {
+            font-size: 0.95rem;
+            color: var(--text-primary);
+            vertical-align: top;
+        }
+
+        .event-date {
+            font-weight: 600;
+            color: #3b82f6;
+            white-space: nowrap;
+        }
+
+        .event-category {
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            color: white;
+            padding: 0.35rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: inline-block;
+            white-space: nowrap;
+        }
+
+        .event-format {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.35rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .format-online {
+            background: rgba(16, 185, 129, 0.15);
+            color: #10b981;
+        }
+
+        .format-offline {
+            background: rgba(59, 130, 246, 0.15);
+            color: #3b82f6;
+        }
+
+        .event-location {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .event-speaker {
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .speaker-name {
+            font-weight: 600;
+            color: var(--text-primary);
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+
+        .speaker-position {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        .register-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.6rem 1.25rem;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+
+        .register-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+        }
+
+        .register-btn.disabled {
+            background: #9ca3af;
+            color: #e5e7eb;
+            cursor: not-allowed;
+            box-shadow: none;
+            pointer-events: none;
+        }
+
+        .register-btn.disabled:hover {
+            transform: none;
+            box-shadow: none;
+        }
+
+        .event-passed {
+            opacity: 0.6;
+        }
+
+        .event-passed .event-date {
+            color: var(--text-secondary);
+        }
+
+        /* Future events section placeholder */
+        .future-events-notice {
+            text-align: center;
+            padding: 3rem 2rem;
+            background: var(--card-bg);
+            border-radius: 16px;
+            border: 2px dashed var(--border-color);
+            margin-top: 2rem;
+        }
+
+        .future-events-notice .icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .future-events-notice p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .events-section {
+                padding: 1rem;
+            }
+
+            .events-table th,
+            .events-table td {
+                padding: 0.75rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header" role="banner">
+        <div class="header-content">
+            <div class="header-top">
+                <div>
+                    <a href="educators.html" class="back-link">← Педагогічним працівникам</a>
+                    <h1 class="header-title">
+                        <a href="index.html"
+                            style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 12px;">
+                            <img src="logo_zoippo.png" alt="Logo" class="header-logo"
+                                style="height: 60px; width: auto; object-fit: contain;">
+                            <span>Запорізький обласний інститут післядипломної педагогічної освіти</span>
+                        </a>
+                    </h1>
+                </div>
+                <button class="theme-toggle" id="themeToggle" aria-label="Перемкнути тему"
+                    title="Перемкнути світлу/темну тему">
+                    <span id="themeIcon" aria-hidden="true">🌙</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" aria-label="Банер сторінки">
+        <div class="hero-content">
+            <div class="hero-badge">💡 НМТ-lab</div>
+            <h2 class="hero-title">Педагогічний інтенсив «НМТ-lab: методичні лайфхаки для вчителів»</h2>
+            <p class="hero-subtitle">
+                Практичні поради, методичні прийоми та лайфхаки для підвищення ефективності підготовки учнів до НМТ.
+            </p>
+        </div>
+    </section>
+
+    <!-- Events Registration Table -->
+    <section class="events-section" aria-label="Розклад заходів">
+        <h2 class="section-title">📅 План проведення заходів</h2>
+
+        <div class="events-table-wrapper">
+            <table class="events-table">
+                <thead>
+                    <tr>
+                        <th>№</th>
+                        <th>Дата та час</th>
+                        <th>Категорія учасників</th>
+                        <th>Формат</th>
+                        <th>Місце проведення</th>
+                        <th>Спікер</th>
+                        <th>Реєстрація</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td class="event-date">14.04.2026<br>14:00</td>
+                        <td><span class="event-category">Вчителі української мови та літератури</span></td>
+                        <td><span class="event-format format-online">🌐 Дистанційний</span></td>
+                        <td class="event-location">Zoom</td>
+                        <td class="event-speaker">
+                            <span class="speaker-name">Юлія ГАРЮНОВА</span>
+                            <span class="speaker-position">
+                                кандидатка філологічних наук, викладачка Харківської гуманітарно-педагогічної академії, авторка підручників та освітніх посібників, тренерка з багаторічним досвідом, проєктна менеджерка та координаторка неакадемічних програм БФ SavEd, викладачка української літератури та тьюторка у Франконській міжнародній школі (Нюрнбер), наукова консультантка ГО «Простір знань»
+                            </span>
+                        </td>
+                        <td>
+                            <a href="https://forms.gle/khWySmNnmAGsd8LD7"
+                                target="_blank" rel="noopener noreferrer" class="register-btn">Реєстрація</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td class="event-date">17.04.2026<br>14:00</td>
+                        <td><span class="event-category">Вчителі історії</span></td>
+                        <td><span class="event-format format-offline">🏫 Очний</span></td>
+                        <td class="event-location">
+                            Комунальний заклад «Запорізький обласний інститут післядипломної педагогічної освіти»
+                            Запорізької обласної ради,<br>
+                            вул. Незалежної України, 57А
+                        </td>
+                        <td class="event-speaker">
+                            <span class="speaker-name">Інна ПОЛТАВСЬКА</span>
+                            <span class="speaker-position">
+                                вчителька історії та правознавства Запорізького ліцею «ОРТ-Алєф» Запорізької міської ради
+                            </span>
+                        </td>
+                        <td>
+                            <a href="https://forms.gle/Uru5NuCPL2gbWxSC8"
+                                target="_blank" rel="noopener noreferrer" class="register-btn">Реєстрація</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td class="event-date">28.04.2026<br>14:00</td>
+                        <td><span class="event-category">Вчителі української мови та літератури</span></td>
+                        <td><span class="event-format format-online">🌐 Дистанційний</span></td>
+                        <td class="event-location">Zoom</td>
+                        <td class="event-speaker">
+                            <span class="speaker-name">Юлія ГАРЮНОВА</span>
+                            <span class="speaker-position">
+                                кандидатка філологічних наук, викладачка Харківської гуманітарно-педагогічної академії, авторка підручників та освітніх посібників, тренерка з багаторічним досвідом, проєктна менеджерка та координаторка неакадемічних програм БФ SavEd, викладачка української літератури та тьюторка у Франконській міжнародній школі (Нюрнбер), наукова консультантка ГО «Простір знань»
+                            </span>
+                        </td>
+                        <td>
+                            <a href="https://forms.gle/qeRqD4QoLfgvLSZU8"
+                                target="_blank" rel="noopener noreferrer" class="register-btn">Реєстрація</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Placeholder for future events -->
+        <div class="future-events-notice">
+            <div class="icon">📣</div>
+            <p>Інформація про проведені заходи та нові події буде додаватись на цю сторінку.</p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p class="footer-text">
+                © 2026 НМТ Resources. Усі матеріали зібрані з відкритих джерел.
+                <br>
+                Офіційна інформація: <a href="https://testportal.gov.ua" target="_blank" rel="noopener noreferrer"
+                    class="footer-link">testportal.gov.ua</a>
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Theme functionality
+        function initTheme() {
+            let theme = 'light';
+            try {
+                const saved = localStorage.getItem('nmt-theme');
+                if (saved) {
+                    theme = saved;
+                } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    theme = 'dark';
+                }
+            } catch (e) {
+                console.warn('Не вдалося завантажити тему:', e);
+            }
+            applyTheme(theme);
+        }
+
+        function applyTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            const themeIcon = document.getElementById('themeIcon');
+            if (themeIcon) {
+                themeIcon.textContent = theme === 'dark' ? '☀️' : '🌙';
+            }
+        }
+
+        function toggleTheme() {
+            const current = document.documentElement.getAttribute('data-theme');
+            const next = current === 'dark' ? 'light' : 'dark';
+            applyTheme(next);
+            try {
+                localStorage.setItem('nmt-theme', next);
+            } catch (e) {
+                console.warn('Не вдалося зберегти тему:', e);
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            initTheme();
+            document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+        });
+    </script>
+    <script src="animations.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="uk">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- SEO Meta Tags -->
+    <title>Моніторинг особливостей підготовки до НМТ - ЗОІППО</title>
+    <meta name="description"
+        content="Аналітичні дані, результати опитувань та дослідження стану підготовки до Національного мультипредметного тесту (НМТ).">
+    <meta name="keywords" content="НМТ, моніторинг, аналітика, дослідження, підготовка до НМТ, ЗОІППО">
+    <meta name="author" content="НМТ Resources">
+    <meta name="robots" content="index, follow">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="uk_UA">
+    <meta property="og:title" content="Моніторинг особливостей підготовки до НМТ">
+    <meta property="og:description"
+        content="Аналітичні дані, результати опитувань та дослідження стану підготовки до НМТ.">
+    <meta property="og:site_name" content="НМТ Resources">
+
+    <!-- Favicon SVG -->
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>">
+
+    <link rel="stylesheet" href="styles.css?v=20260119">
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header" role="banner">
+        <div class="header-content">
+            <div class="header-top">
+                <div>
+                    <a href="educators.html" class="back-link">← Педагогічним працівникам</a>
+                    <h1 class="header-title">
+                        <a href="index.html"
+                            style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 12px;">
+                            <img src="logo_zoippo.png" alt="Logo" class="header-logo"
+                                style="height: 60px; width: auto; object-fit: contain;">
+                            <span>Запорізький обласний інститут післядипломної педагогічної освіти</span>
+                        </a>
+                    </h1>
+                </div>
+                <button class="theme-toggle" id="themeToggle" aria-label="Перемкнути тему"
+                    title="Перемкнути світлу/темну тему">
+                    <span id="themeIcon" aria-hidden="true">🌙</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" aria-label="Банер сторінки">
+        <div class="hero-content">
+            <div class="hero-badge">📊 Моніторинг</div>
+            <h2 class="hero-title">Моніторинг особливостей підготовки учасників освітнього процесу до НМТ-2026</h2>
+            <p class="hero-subtitle">
+                Аналітичні дані, результати опитувань та дослідження стану підготовки до національного мультипредметного
+                тесту.
+            </p>
+        </div>
+    </section>
+
+    <!-- Materials Section -->
+    <section class="resources-section" aria-label="Матеріали моніторингу">
+        <div class="resources-content">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <span aria-hidden="true">📁</span>
+                    <span>Матеріали</span>
+                </h2>
+            </div>
+
+            <div class="materials-grid">
+                <!-- Material Card 1 -->
+                <article class="material-card">
+                    <div class="material-card-icon" aria-hidden="true">📄</div>
+                    <div class="material-card-content">
+                        <h3 class="material-card-title">Аналітична довідка НМТ</h3>
+                        <p class="material-card-description">
+                            Аналітичний огляд особливостей підготовки учасників освітнього процесу до національного
+                            мультипредметного тесту у Запорізькій області.
+                        </p>
+                        <div class="material-card-meta">
+                            <span class="material-type">PDF документ</span>
+                        </div>
+                        <a href="https://drive.google.com/file/d/1hu04FkQte5bNiKCxvEXP-r749Sj8xsxb/view?usp=sharing"
+                            target="_blank" rel="noopener noreferrer" class="material-card-link">
+                            📄 Переглянути документ
+                        </a>
+                    </div>
+                </article>
+
+                <!-- Placeholder for future materials - можна додавати нові картки за цим шаблоном -->
+                <!--
+                <article class="material-card">
+                    <div class="material-card-icon" aria-hidden="true">📄</div>
+                    <div class="material-card-content">
+                        <h3 class="material-card-title">Назва матеріалу</h3>
+                        <p class="material-card-description">
+                            Опис матеріалу.
+                        </p>
+                        <div class="material-card-meta">
+                            <span class="material-type">Тип документу</span>
+                        </div>
+                        <a href="файл.pdf" target="_blank" rel="noopener noreferrer" 
+                           class="material-card-link" download>
+                            📥 Завантажити документ
+                        </a>
+                    </div>
+                </article>
+                -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p class="footer-text">
+                © 2026 НМТ Resources. Усі матеріали зібрані з відкритих джерел.
+                <br>
+                Офіційна інформація: <a href="https://testportal.gov.ua" target="_blank" rel="noopener noreferrer"
+                    class="footer-link">testportal.gov.ua</a>
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Theme functionality
+        function initTheme() {
+            let theme = 'light';
+            try {
+                const saved = localStorage.getItem('nmt-theme');
+                if (saved) {
+                    theme = saved;
+                } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    theme = 'dark';
+                }
+            } catch (e) {
+                console.warn('Не вдалося завантажити тему:', e);
+            }
+            applyTheme(theme);
+        }
+
+        function applyTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            const themeIcon = document.getElementById('themeIcon');
+            if (themeIcon) {
+                themeIcon.textContent = theme === 'dark' ? '☀️' : '🌙';
+            }
+        }
+
+        function toggleTheme() {
+            const current = document.documentElement.getAttribute('data-theme');
+            const next = current === 'dark' ? 'light' : 'dark';
+            applyTheme(next);
+            try {
+                localStorage.setItem('nmt-theme', next);
+            } catch (e) {
+                console.warn('Не вдалося зберегти тему:', e);
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            initTheme();
+            document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+        });
+    </script>
+    <script src="animations.js"></script>
+</body>
+
+</html>

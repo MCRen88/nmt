@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="uk">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ресурси для учнів - Підготовка до НМТ</title>
+    <meta name="description" content="Тренувальні тести, відеоуроки, онлайн-курси для самостійної підготовки до НМТ.">
+    <meta name="robots" content="index, follow">
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>">
+    <link rel="stylesheet" href="styles.css?v=20251211">
+</head>
+
+<body>
+    <header class="header" role="banner">
+        <div class="header-content">
+            <div class="header-top">
+                <div>
+                    <a href="index.html" class="back-link">← На головну</a>
+                    <h1 class="header-title">
+                        <span aria-hidden="true">🎓</span>
+                        <span>Ресурси для здобувачів освіти</span>
+                    </h1>
+                    <p class="header-subtitle">Тренувальні тести, відеоуроки та онлайн-курси для підготовки до НМТ</p>
+                </div>
+                <button class="theme-toggle" id="themeToggle" aria-label="Перемкнути тему">
+                    <span id="themeIcon" aria-hidden="true">🌙</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <nav class="filters-panel" role="search" aria-label="Фільтри ресурсів">
+        <div class="filters-content">
+            <div class="filters-row">
+                <input type="text" id="searchInput" class="form-control" placeholder="🔍 Шукати ресурс..."
+                    aria-label="Пошук ресурсів">
+                <select id="sectionFilter" class="form-control" aria-label="Фільтр за розділом">
+                    <option value="">Усі розділи</option>
+                </select>
+                <select id="subjectFilter" class="form-control" aria-label="Фільтр за предметом">
+                    <option value="">Усі предмети</option>
+                </select>
+            </div>
+            <div class="filters-actions">
+                <span class="results-count" id="resultsCount" aria-live="polite">Завантаження...</span>
+                <button class="btn btn--secondary btn--sm" id="clearFilters">Очистити фільтри</button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-content" role="main">
+        <div class="resources-grid" id="resourcesGrid"></div>
+        <div class="no-results" id="noResults" style="display: none;">
+            <p>😔 Не знайдено ресурсів за вашими критеріями.</p>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <p class="footer-text">
+                <a href="index.html" class="footer-link">← На головну</a> |
+                <a href="teachers.html" class="footer-link">Ресурси для вчителів →</a>
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Based on Excel "Для кого" column - all resources where "Учні" is mentioned
+        const resources = [
+            // 1. ОФІЦІЙНІ (1-18 except 3-4 which are students only)
+            { id: 1, title: "Тренувальне онлайнове тестування (ТОЛТ)", section: "1. ОФІЦІЙНІ РЕСУРСИ УЦОЯО", section_short: "Офіційні", category: "1.1. Обов'язкові для всіх", primary_link: "https://testportal.gov.ua/nmt-2025-na-dopomogu-uchasnykam-trenuvalni-testy/", additional_links: [{ title: "Альтернативне посилання", url: "https://lv.testportal.gov.ua" }, { title: "Альтернативний вхід (2025)", url: "http://lv.testportal.gov.ua:8080/" }, { title: "Офіційний сайт УЦОЯО", url: "https://testportal.gov.ua" }], subjects: ["Математика", "Українська мова", "Історія України", "Англійська мова", "Біологія", "Фізика", "Хімія", "Географія"], description: "Офіційна платформа УЦОЯО з реальними завданнями НМТ 2024-2025.", format: ["Онлайн-тести"], color: "#0066CC", icon: "🎯" },
+            { id: 2, title: "Офіційний портал УЦОЯО", section: "1. ОФІЦІЙНІ РЕСУРСИ УЦОЯО", section_short: "Офіційні", category: "1.1. Обов'язкові для всіх", primary_link: "https://testportal.gov.ua", additional_links: [{ title: "НМТ розділ", url: "https://testportal.gov.ua/nmt/" }, { title: "Підготовка до НМТ", url: "https://testportal.gov.ua/pidgotovka-do-nmt-2025/" }, { title: "Запитання-відповіді", url: "https://testportal.gov.ua/zapytannya-vidpovidi-nmt/" }], subjects: ["Всі предмети"], description: "Єдине офіційне джерело інформації про НМТ.", format: ["Веб-портал"], color: "#0066CC", icon: "📋" },
+            { id: 3, title: "Персональний кабінет учасника НМТ", section: "1. ОФІЦІЙНІ РЕСУРСИ УЦОЯО", section_short: "Офіційні", category: "1.1. Обов'язкові для всіх", primary_link: "https://my.testportal.gov.ua", additional_links: [], subjects: ["Всі предмети"], description: "Реєстрація на НМТ, перегляд результатів, завантаження сертифікатів.", format: ["Електронний кабінет"], color: "#0066CC", icon: "👤" },
+            { id: 4, title: "Мобільний додаток 'Моє ЗНО'", section: "1. ОФІЦІЙНІ РЕСУРСИ УЦОЯО", section_short: "Офіційні", category: "1.1. Обов'язкові для всіх", primary_link: "https://testportal.gov.ua/mobilnij-dodatok-moye-zno-dostupnij-dlya-koristuvachiv-ios-sistem/", additional_links: [], subjects: ["Всі предмети"], description: "Офіційний мобільний додаток УЦОЯО. Розклад, нагадування, результати.", format: ["Мобільний додаток"], color: "#0066CC", icon: "📱" },
+            { id: 5, title: "Архів тестів ЗНО/НМТ (2007-2024)", section: "1. ОФІЦІЙНІ РЕСУРСИ УЦОЯО", section_short: "Офіційні", category: "1.1. Обов'язкові для всіх", primary_link: "https://testportal.gov.ua/testy-mynulyh-rokiv/", additional_links: [], subjects: ["Всі предмети"], description: "Повні варіанти тестів усіх років для завантаження.", format: ["PDF файли"], color: "#0066CC", icon: "📚" },
+            { id: 6, title: "Демонстраційні варіанти НМТ-2025", section: "1. ОФІЦІЙНІ РЕСУРСИ УЦОЯО", section_short: "Офіційні", category: "1.1. Обов'язкові для всіх", primary_link: "https://lv.testportal.gov.ua/?page_id=1551", additional_links: [{ title: "На ВШО платформі", url: "https://lms.e-school.net.ua/courses/course-v1:uceqe+nmt_demo_2025+2025-01/course/" }], subjects: ["Всі предмети"], description: "Офіційні демоваріанти НМТ-2025 з розв'язками.", format: ["Онлайн + PDF"], color: "#0066CC", icon: "🔍" },
+            { id: 7, title: "Програма НМТ з Математики", section: "1. ОФІЦІЙНІ РЕСУРСИ УЦОЯО", section_short: "Офіційні", category: "1.2. Офіційні програми НМТ", primary_link: "https://testportal.gov.ua/progmath/", additional_links: [], subjects: ["Математика"], description: "Офіційна програма тестування з математики.", format: ["Документ"], color: "#0066CC", icon: "🔢" },
+            { id: 8, title: "Програма НМТ з Української мови", section: "1. ОФІЦІЙНІ РЕСУРСИ УЦОЯО", section_short: "Офіційні", category: "1.2. Офіційні програми НМТ", primary_link: "https://testportal.gov.ua/programe/", additional_links: [], subjects: ["Українська мова"], description: "Офіційна програма тестування.", format: ["Документ"], color: "#0066CC", icon: "📖" },
+            { id: 9, title: "Програма НМТ з Історії України", section: "1. ОФІЦІЙНІ РЕСУРСИ УЦОЯО", section_short: "Офіційні", category: "1.2. Офіційні програми НМТ", primary_link: "https://testportal.gov.ua/progist/", additional_links: [], subjects: ["Історія України"], description: "Офіційна програма тестування.", format: ["Документ"], color: "#0066CC", icon: "🏛️" },
+            { id: 10, title: "Програма НМТ з Англійської мови", section: "1. ОФІЦІЙНІ РЕСУРСИ УЦОЯО", section_short: "Офіційні", category: "1.2. Офіційні програми НМТ", primary_link: "https://testportal.gov.ua/progenglish/", additional_links: [], subjects: ["Англійська мова"], description: "Офіційна програма тестування.", format: ["Документ"], color: "#0066CC", icon: "🌐" },
+            { id: 11, title: "Програма НМТ з Біології", section: "1. ОФІЦІЙНІ РЕСУРСИ УЦОЯО", section_short: "Офіційні", category: "1.2. Офіційні програми НМТ", primary_link: "https://testportal.gov.ua/progbio/", additional_links: [], subjects: ["Біологія"], description: "Офіційна програма тестування.", format: ["Документ"], color: "#0066CC", icon: "🧬" },
+            { id: 12, title: "Програма НМТ з Фізики", section: "1. ОФІЦІЙНІ РЕСУРСИ УЦОЯО", section_short: "Офіційні", category: "1.2. Офіційні програми НМТ", primary_link: "https://testportal.gov.ua/progphys/", additional_links: [], subjects: ["Фізика"], description: "Офіційна програма тестування.", format: ["Документ"], color: "#0066CC", icon: "⚡" },
+            { id: 13, title: "Програма НМТ з Хімії", section: "1. ОФІЦІЙНІ РЕСУРСИ УЦОЯО", section_short: "Офіційні", category: "1.2. Офіційні програми НМТ", primary_link: "https://testportal.gov.ua/progchem/", additional_links: [], subjects: ["Хімія"], description: "Офіційна програма тестування.", format: ["Документ"], color: "#0066CC", icon: "🧪" },
+            { id: 14, title: "Програма НМТ з Географії", section: "1. ОФІЦІЙНІ РЕСУРСИ УЦОЯО", section_short: "Офіційні", category: "1.2. Офіційні програми НМТ", primary_link: "https://testportal.gov.ua/proggeo/", additional_links: [], subjects: ["Географія"], description: "Офіційна програма тестування.", format: ["Документ"], color: "#0066CC", icon: "🌍" },
+            { id: 15, title: "Програма НМТ з Німецької мови", section: "1. ОФІЦІЙНІ РЕСУРСИ УЦОЯО", section_short: "Офіційні", category: "1.2. Офіційні програми НМТ", primary_link: "https://testportal.gov.ua/proggerman/", additional_links: [], subjects: ["Німецька мова"], description: "Офіційна програма тестування.", format: ["Документ"], color: "#0066CC", icon: "🇩🇪" },
+            { id: 16, title: "Програма НМТ з Французької мови", section: "1. ОФІЦІЙНІ РЕСУРСИ УЦОЯО", section_short: "Офіційні", category: "1.2. Офіційні програми НМТ", primary_link: "https://testportal.gov.ua/progfrench/", additional_links: [], subjects: ["Французька мова"], description: "Офіційна програма тестування.", format: ["Документ"], color: "#0066CC", icon: "🇫🇷" },
+            { id: 17, title: "Програма НМТ з Іспанської мови", section: "1. ОФІЦІЙНІ РЕСУРСИ УЦОЯО", section_short: "Офіційні", category: "1.2. Офіційні програми НМТ", primary_link: "https://testportal.gov.ua/progspanish/", additional_links: [], subjects: ["Іспанська мова"], description: "Офіційна програма тестування.", format: ["Документ"], color: "#0066CC", icon: "🇪🇸" },
+            { id: 18, title: "Програма НМТ з Української літератури", section: "1. ОФІЦІЙНІ РЕСУРСИ УЦОЯО", section_short: "Офіційні", category: "1.2. Офіційні програми НМТ", primary_link: "https://testportal.gov.ua/proglit/", additional_links: [], subjects: ["Українська література"], description: "Офіційна програма тестування.", format: ["Документ"], color: "#0066CC", icon: "📚" },
+            // 2. МОН (19-20)
+            { id: 19, title: "Електронні підручники МОН України", section: "2. РЕСУРСИ МОН", section_short: "МОН", category: "2.1. Електронні підручники", primary_link: "https://imzo.gov.ua/pidruchniki/elektronni-versiyi-pidruchnikiv/", additional_links: [], subjects: ["Всі предмети"], description: "Офіційні електронні версії підручників МОН.", format: ["PDF/EPUB"], color: "#009900", icon: "📕" },
+            { id: 20, title: "Всеукраїнська школа онлайн (ВШО)", section: "2. РЕСУРСИ МОН", section_short: "МОН", category: "2.2. Державна платформа", primary_link: "https://lms.e-school.net.ua", additional_links: [{ title: "Демоваріант НМТ-2025", url: "https://lms.e-school.net.ua/courses/course-v1:uceqe+nmt_demo_2025+2025-01/course/" }, { title: "Демоваріант НМТ-2024", url: "https://lms.e-school.net.ua/courses/course-v1:uceqe+demo_nmt-2024+2024_02/course/" }], subjects: ["Всі предмети"], description: "Відеоуроки від провідних вчителів.", format: ["Відеоуроки", "Тести"], color: "#009900", icon: "🎓" },
+            // 3. ПОПУЛЯРНІ ПЛАТФОРМИ (21-23 students only)
+            { id: 21, title: "Osvita.ua (ЗНО онлайн)", section: "3. ПОПУЛЯРНІ ПЛАТФОРМИ", section_short: "Платформи", category: "3.1. Універсальні платформи", primary_link: "https://zno.osvita.ua", additional_links: [{ title: "Математика", url: "https://zno.osvita.ua/mathematics/" }, { title: "Українська мова", url: "https://zno.osvita.ua/ukrmova/" }, { title: "Симулятор НМТ", url: "https://zno.osvita.ua/multitest/" }], subjects: ["Всі предмети"], description: "Найпопулярніша платформа для НМТ. 1+ млн користувачів.", format: ["Онлайн-тести", "Симулятор"], color: "#FF9900", icon: "⭐" },
+            { id: 22, title: "Просте ЗНО/НМТ", section: "3. ПОПУЛЯРНІ ПЛАТФОРМИ", section_short: "Платформи", category: "3.1. Універсальні платформи", primary_link: "https://prostezno.com.ua", additional_links: [], subjects: ["Всі предмети"], description: "Популярний мобільний додаток. Рейтинг 4.8-5.0.", format: ["Мобільний додаток"], color: "#FF9900", icon: "📲" },
+            { id: 23, title: "iLearn - Гейміфікована платформа", section: "3. ПОПУЛЯРНІ ПЛАТФОРМИ", section_short: "Платформи", category: "3.1. Універсальні платформи", primary_link: "https://ilearn.org.ua", additional_links: [], subjects: ["Всі предмети"], description: "Безкоштовна гейміфікована платформа. Вебінари, курси.", format: ["Вебінари", "Курси"], color: "#FF9900", icon: "🎮" },
+            // 4. MOOC (24-28 students only + shared 35-36, 38-43)
+            { id: 24, title: "Prometheus - Математика", section: "4. MOOC КУРСИ", section_short: "MOOC", category: "4.1. Курси від Prometheus", primary_link: "https://prometheus.org.ua/prometheus-free/math-zno-prep/", additional_links: [{ title: "Лайфхаки з математики", url: "https://prometheus.org.ua/prometheus-free/math-zno-hacks/" }], subjects: ["Математика"], description: "Повний курс математики від КПІ і НаУКМА.", format: ["Відеолекції", "Вправи"], color: "#9933CC", icon: "🎓" },
+            { id: 25, title: "Prometheus - Українська мова та література", section: "4. MOOC КУРСИ", section_short: "MOOC", category: "4.1. Курси від Prometheus", primary_link: "https://prometheus.org.ua/prometheus-free/ukrainian-language-literature-zno/", additional_links: [], subjects: ["Українська мова", "Українська література"], description: "Комбінований курс мови та літератури.", format: ["Відеолекції", "Тести"], color: "#9933CC", icon: "📖" },
+            { id: 26, title: "Prometheus - Історія України", section: "4. MOOC КУРСИ", section_short: "MOOC", category: "4.1. Курси від Prometheus", primary_link: "https://prometheus.org.ua/prometheus-free/history-ukraine-zno/", additional_links: [], subjects: ["Історія України"], description: "Повна історія від найдавніших часів до сучасності.", format: ["Відеолекції"], color: "#9933CC", icon: "🏛️" },
+            { id: 27, title: "Prometheus - Англійська мова", section: "4. MOOC КУРСИ", section_short: "MOOC", category: "4.1. Курси від Prometheus", primary_link: "https://prometheus.org.ua/prometheus-free/zno-english-razom-z-mogylyantsiamy/", additional_links: [], subjects: ["Англійська мова"], description: "Курс від викладачів НаУКМА.", format: ["Відеолекції", "Вправи"], color: "#9933CC", icon: "🌐" },
+            { id: 28, title: "EdEra - Безкоштовні матеріали", section: "4. MOOC КУРСИ", section_short: "MOOC", category: "4.1. MOOC курси", primary_link: "https://study.ed-era.com", additional_links: [{ title: "Каталог курсів", url: "https://study.ed-era.com/courses" }], subjects: ["Всі предмети"], description: "Безкоштовні матеріали для підготовки до НМТ.", format: ["Відеокурси"], color: "#9933CC", icon: "💡" },
+            // 5. YOUTUBE (29-33 students only + 42)
+            { id: 29, title: "МАТЕМАТИЧКА (Наталя Буцикіна)", section: "5. YOUTUBE КАНАЛИ", section_short: "YouTube", category: "5.1. YouTube канали", primary_link: "https://www.youtube.com/@matematichka", additional_links: [], subjects: ["Математика"], description: "Один з найпопулярніших каналів з математики.", format: ["YouTube"], color: "#990000", icon: "🎥" },
+            { id: 30, title: "Павло Віктор - Вчитель фізики", section: "5. YOUTUBE КАНАЛИ", section_short: "YouTube", category: "5.1. YouTube канали", primary_link: "https://www.youtube.com/watch?v=auulH7h6gwg&list=PL1Us50cZo25nQ6CavRHSj5VyMuO-CnIMh", additional_links: [], subjects: ["Фізика"], description: "Легенда українського YouTube. 1.22+ млн підписників.", format: ["YouTube"], color: "#990000", icon: "⚡" },
+            { id: 31, title: "TURBO ZNO", section: "5. YOUTUBE КАНАЛИ", section_short: "YouTube", category: "5.1. YouTube канали", primary_link: "https://www.youtube.com/c/TurboZNO", additional_links: [], subjects: ["Всі предмети"], description: "Щотижневі безкоштовні вебінари з підготовки до НМТ.", format: ["YouTube вебінари"], color: "#990000", icon: "🚀" },
+            { id: 32, title: "ONLY SCHOOL", section: "5. YOUTUBE КАНАЛИ", section_short: "YouTube", category: "5.1. YouTube канали", primary_link: "https://www.youtube.com/@onlyschool.online", additional_links: [], subjects: ["Всі предмети"], description: "Безкоштовний контент. Короткі відеолекції.", format: ["YouTube"], color: "#990000", icon: "📊" },
+            { id: 33, title: "ZNOHUB", section: "5. YOUTUBE КАНАЛИ", section_short: "YouTube", category: "5.1. YouTube канали", primary_link: "https://www.youtube.com/@znohub", additional_links: [], subjects: ["Всі предмети"], description: "Безкоштовний контент для підготовки до НМТ.", format: ["YouTube"], color: "#990000", icon: "✅" },
+            // Shared (35-36, 38-43)
+            { id: 35, title: "МійКлас", section: "6. ДОПОМІЖНІ ПЛАТФОРМИ", section_short: "Платформи", category: "6.1. LMS платформи", primary_link: "https://miyklas.com.ua", additional_links: [], subjects: ["Всі предмети"], description: "LMS платформа для тренування.", format: ["Веб-платформа"], color: "#663300", icon: "💻" },
+            { id: 36, title: "Na Urok (Naurok)", section: "6. ДОПОМІЖНІ ПЛАТФОРМИ", section_short: "Платформи", category: "6.1. LMS платформи", primary_link: "https://naurok.com.ua", additional_links: [], subjects: ["Всі предмети"], description: "Тренажери НМТ, тести.", format: ["Веб-конструктор"], color: "#663300", icon: "✏️" },
+            { id: 38, title: "Пробні Тести НМТ з Математики", section: "3. ПОПУЛЯРНІ ПЛАТФОРМИ", section_short: "Платформи", category: "3.1. Універсальні платформи", primary_link: "https://www.mathcorporation.com/quizzes/math-nmt?year=all", additional_links: [], subjects: ["Математика"], description: "Пробні тести НМТ з математики за всі роки.", format: ["Онлайн-тести"], color: "#FF9900", icon: "🔢" },
+            { id: 39, title: "Mathema - Курс підготовки до НМТ", section: "4. MOOC КУРСИ", section_short: "MOOC", category: "4.1. MOOC курси", primary_link: "https://mathema.me/kurs-pidhotovky-do-nmt-z-matematyky/", additional_links: [], subjects: ["Математика"], description: "Курс підготовки до НМТ з математики.", format: ["Відеокурси", "Тести"], color: "#9933CC", icon: "📐" },
+            { id: 40, title: "МАТЕМАТИКА. ПРОСТО", section: "4. MOOC КУРСИ", section_short: "MOOC", category: "4.1. MOOC курси", primary_link: "https://study.ed-era.com/uk/courses/course/5160", additional_links: [], subjects: ["Математика"], description: "Курс з математики від EdEra.", format: ["Відеокурси"], color: "#9933CC", icon: "➕" },
+            { id: 41, title: "Готуйтесь серйоЗНО до географії", section: "3. ПОПУЛЯРНІ ПЛАТФОРМИ", section_short: "Платформи", category: "3.1. Універсальні платформи", primary_link: "https://geografiamozil2.jimdofree.com/", additional_links: [], subjects: ["Географія"], description: "Курс з географії для підготовки до НМТ.", format: ["Тести", "Відеокурси"], color: "#FF9900", icon: "🌍" },
+            { id: 42, title: "Рішельєвський дистанційний", section: "5. YOUTUBE КАНАЛИ", section_short: "YouTube", category: "5.1. YouTube канали", primary_link: "https://www.youtube.com/@osvita.onlain", additional_links: [], subjects: ["Географія"], description: "YouTube канал з курсами географії.", format: ["YouTube"], color: "#990000", icon: "🎬" },
+            { id: 43, title: "Уміти", section: "6. ДОПОМІЖНІ ПЛАТФОРМИ", section_short: "Платформи", category: "6.1. LMS платформи", primary_link: "https://umity.in.ua/resources/?chapter=8_geography", additional_links: [], subjects: ["Географія", "Всі предмети"], description: "Освітня платформа з ресурсами.", format: ["Веб-платформа"], color: "#663300", icon: "📚" }
+        ];
+
+        const subjects = ["Математика", "Українська мова", "Українська література", "Історія України", "Англійська мова", "Німецька мова", "Французька мова", "Іспанська мова", "Біологія", "Фізика", "Хімія", "Географія"];
+        const sections = [...new Set(resources.map(r => r.section))].sort();
+
+        let filteredResources = [...resources];
+        let favorites = [];
+
+        function init() {
+            loadFavorites();
+            initTheme();
+            populateFilters();
+            renderResources();
+            attachEventListeners();
+        }
+
+        function loadFavorites() {
+            try { const saved = localStorage.getItem('nmt-favorites'); if (saved) favorites = JSON.parse(saved); } catch (e) { favorites = []; }
+        }
+
+        function saveFavorites() {
+            try { localStorage.setItem('nmt-favorites', JSON.stringify(favorites)); } catch (e) { }
+        }
+
+        function initTheme() {
+            let theme = 'light';
+            try { const saved = localStorage.getItem('nmt-theme'); if (saved) theme = saved; else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) theme = 'dark'; } catch (e) { }
+            applyTheme(theme);
+        }
+
+        function applyTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            const icon = document.getElementById('themeIcon');
+            if (icon) icon.textContent = theme === 'dark' ? '☀️' : '🌙';
+        }
+
+        function toggleTheme() {
+            const current = document.documentElement.getAttribute('data-theme');
+            const next = current === 'dark' ? 'light' : 'dark';
+            applyTheme(next);
+            try { localStorage.setItem('nmt-theme', next); } catch (e) { }
+        }
+
+        function populateFilters() {
+            const sectionFilter = document.getElementById('sectionFilter');
+            const subjectFilter = document.getElementById('subjectFilter');
+            sections.forEach(s => { const o = document.createElement('option'); o.value = s; o.textContent = s; sectionFilter.appendChild(o); });
+            subjects.forEach(s => { const o = document.createElement('option'); o.value = s; o.textContent = s; subjectFilter.appendChild(o); });
+        }
+
+        function renderResources() {
+            const grid = document.getElementById('resourcesGrid');
+            const noResults = document.getElementById('noResults');
+            const resultsCount = document.getElementById('resultsCount');
+            const sorted = [...filteredResources].sort((a, b) => a.section.localeCompare(b.section));
+            grid.innerHTML = '';
+            if (sorted.length === 0) { grid.style.display = 'none'; noResults.style.display = 'block'; }
+            else { grid.style.display = 'grid'; noResults.style.display = 'none'; sorted.forEach(r => grid.appendChild(createResourceCard(r))); }
+            resultsCount.textContent = `Показано ${sorted.length} з ${resources.length} ресурсів`;
+        }
+
+        function createResourceCard(r) {
+            const card = document.createElement('article');
+            card.className = 'resource-card';
+            const isFav = favorites.includes(r.id);
+            const hasLinks = r.additional_links.length > 0;
+            card.innerHTML = `
+        <div class="section-badge" style="background-color: ${r.color};">${r.section_short}</div>
+        <button class="favorite-btn ${isFav ? 'active' : ''}" data-id="${r.id}" title="${isFav ? 'Видалити з улюблених' : 'Додати до улюблених'}" aria-pressed="${isFav}"><span aria-hidden="true">${isFav ? '⭐' : '☆'}</span></button>
+        <div class="resource-icon" aria-hidden="true">${r.icon}</div>
+        <h3 class="resource-title">${r.title}</h3>
+        <p class="resource-category">${r.category}</p>
+        <p class="resource-description">${r.description}</p>
+        <div class="resource-meta">
+          <div class="resource-meta-item"><span class="meta-label">📚 Предмети:</span><div class="meta-value subjects-tags">${r.subjects.map(s => `<span class="subject-tag">#${s}</span>`).join('')}</div></div>
+          <div class="resource-meta-item"><span class="meta-label">📝 Формат:</span><span class="meta-value">${r.format.join(', ')}</span></div>
+        </div>
+        <div class="resource-actions">
+          <a href="${r.primary_link}" target="_blank" rel="noopener noreferrer" class="btn btn--primary">Перейти до ресурсу</a>
+          ${hasLinks ? `<button class="btn btn--secondary toggle-links" data-id="${r.id}">Додаткові посилання (${r.additional_links.length})</button><div class="additional-links" id="links-${r.id}">${r.additional_links.map(l => `<a href="${l.url}" target="_blank" rel="noopener noreferrer" class="additional-link">→ ${l.title}</a>`).join('')}</div>` : ''}
+        </div>`;
+            return card;
+        }
+
+        function attachEventListeners() {
+            document.getElementById('searchInput').addEventListener('input', applyFilters);
+            document.getElementById('sectionFilter').addEventListener('change', applyFilters);
+            document.getElementById('subjectFilter').addEventListener('change', applyFilters);
+            document.getElementById('clearFilters').addEventListener('click', resetFilters);
+            document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+            document.getElementById('resourcesGrid').addEventListener('click', handleCardActions);
+        }
+
+        function applyFilters() {
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const section = document.getElementById('sectionFilter').value;
+            const subject = document.getElementById('subjectFilter').value;
+            filteredResources = resources.filter(r => {
+                const matchSearch = !search || r.title.toLowerCase().includes(search) || r.description.toLowerCase().includes(search);
+                const matchSection = !section || r.section === section;
+                const matchSubject = !subject || r.subjects.includes(subject) || r.subjects.includes('Всі предмети');
+                return matchSearch && matchSection && matchSubject;
+            });
+            renderResources();
+        }
+
+        function resetFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('sectionFilter').value = '';
+            document.getElementById('subjectFilter').value = '';
+            applyFilters();
+        }
+
+        function handleCardActions(e) {
+            if (e.target.classList.contains('toggle-links')) {
+                const id = e.target.getAttribute('data-id');
+                const links = document.getElementById(`links-${id}`);
+                links.classList.toggle('active');
+                e.target.textContent = links.classList.contains('active') ? 'Приховати' : `Додаткові посилання`;
+            }
+            if (e.target.classList.contains('favorite-btn') || e.target.closest('.favorite-btn')) {
+                const btn = e.target.classList.contains('favorite-btn') ? e.target : e.target.closest('.favorite-btn');
+                const id = parseInt(btn.getAttribute('data-id'));
+                const idx = favorites.indexOf(id);
+                if (idx === -1) favorites.push(id); else favorites.splice(idx, 1);
+                const isFav = idx === -1;
+                btn.classList.toggle('active', isFav);
+                btn.setAttribute('aria-pressed', isFav);
+                btn.querySelector('span').textContent = isFav ? '⭐' : '☆';
+                saveFavorites();
+            }
+        }
+
+        init();
+    </script>
+    <script src="animations.js"></script>
+</body>
+
+</html>

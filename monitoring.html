@@ -25,7 +25,7 @@
     <link rel="icon" type="image/svg+xml"
         href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>">
 
-    <link rel="stylesheet" href="styles.css?v=20261111">
+    <link rel="stylesheet" href="styles.css?v=20261123">
 </head>
 
 <body>
@@ -38,8 +38,7 @@
                     <h1 class="header-title">
                         <a href="index.html"
                             style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 12px;">
-                            <img src="logo_zoippo.png" alt="Logo" class="header-logo"
-                                style="height: 60px; width: auto; object-fit: contain;">
+                            <img src="logo_zoippo.png" alt="Логотип ЗОІППО" class="header-logo" width="60" height="60" decoding="async">
                             <span>Запорізький обласний інститут післядипломної педагогічної освіти</span>
                         </a>
                     </h1>
@@ -129,49 +128,8 @@
         </div>
     </footer>
 
-    <script>
-        // Theme functionality
-        function initTheme() {
-            let theme = 'light';
-            try {
-                const saved = localStorage.getItem('nmt-theme');
-                if (saved) {
-                    theme = saved;
-                } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                    theme = 'dark';
-                }
-            } catch (e) {
-                console.warn('Не вдалося завантажити тему:', e);
-            }
-            applyTheme(theme);
-        }
-
-        function applyTheme(theme) {
-            document.documentElement.setAttribute('data-theme', theme);
-            const themeIcon = document.getElementById('themeIcon');
-            if (themeIcon) {
-                themeIcon.textContent = theme === 'dark' ? '☀️' : '🌙';
-            }
-        }
-
-        function toggleTheme() {
-            const current = document.documentElement.getAttribute('data-theme');
-            const next = current === 'dark' ? 'light' : 'dark';
-            applyTheme(next);
-            try {
-                localStorage.setItem('nmt-theme', next);
-            } catch (e) {
-                console.warn('Не вдалося зберегти тему:', e);
-            }
-        }
-
-        // Initialize
-        document.addEventListener('DOMContentLoaded', () => {
-            initTheme();
-            document.getElementById('themeToggle').addEventListener('click', toggleTheme);
-        });
-    </script>
-    <script src="animations.js"></script>
+    <script src="script.js?v=20261123"></script>
+    <script src="animations.js?v=20261123"></script>
 </body>
 
 </html>

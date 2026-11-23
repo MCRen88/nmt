@@ -584,10 +584,19 @@ select.form-control {
   display: inline-block;
   padding: var(--space-4) var(--space-8);
   background: var(--color-bg-1);
+  border: 1px solid transparent;
   border-radius: var(--radius-sm);
   font-size: var(--font-size-xs);
+  font-family: inherit;
   color: var(--color-text);
   font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all var(--duration-fast);
+}
+
+.subject-tag:hover {
+  background: rgba(var(--color-teal-500-rgb), 0.18);
+  border-color: var(--color-primary);
 }
 
 .resource-actions {
@@ -954,19 +963,6 @@ select.form-control {
   transform: translateY(0);
 }
 
-.resource-card {
-  transition: transform var(--duration-normal) var(--ease-standard), box-shadow var(--duration-normal) var(--ease-standard);
-}
-
-.resource-card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-xl);
-}
-
-.nav-card:hover {
-  transform: translateY(-4px);
-}
-
 /* Resources Section */
 .resources-section {
   padding: var(--space-48) var(--space-16);
@@ -1202,6 +1198,20 @@ select.form-control {
   max-height: 85vh;
   border-radius: var(--radius-base);
   box-shadow: var(--shadow-xl);
+}
+
+.modal-counter {
+  position: absolute;
+  bottom: -36px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.65);
+  color: white;
+  padding: 4px 14px;
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: 0.5px;
 }
 
 .modal-close {

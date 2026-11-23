@@ -10,7 +10,7 @@
     <meta name="robots" content="index, follow">
     <link rel="icon" type="image/svg+xml"
         href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👩‍🏫</text></svg>">
-    <link rel="stylesheet" href="styles.css?v=20261111">
+    <link rel="stylesheet" href="styles.css?v=20261123">
 </head>
 
 <body>
@@ -108,162 +108,16 @@
         ];
 
         const subjects = ["Математика", "Українська мова", "Українська література", "Історія України", "Англійська мова", "Німецька мова", "Французька мова", "Іспанська мова", "Біологія", "Фізика", "Хімія", "Географія"];
-        const sections = [...new Set(resources.map(r => r.section))].sort();
-
-        let filteredResources = [...resources];
-        let favorites = [];
-        let onlyFavorites = false;
-
-        function init() {
-            loadFavorites();
-            initTheme();
-            populateFilters();
-            renderResources();
-            attachEventListeners();
-        }
-
-        function loadFavorites() {
-            try { const saved = localStorage.getItem('nmt-favorites-teachers'); if (saved) favorites = JSON.parse(saved); } catch (e) { favorites = []; }
-        }
-
-        function saveFavorites() {
-            try { localStorage.setItem('nmt-favorites-teachers', JSON.stringify(favorites)); } catch (e) { }
-        }
-
-        function initTheme() {
-            let theme = 'light';
-            try { const saved = localStorage.getItem('nmt-theme'); if (saved) theme = saved; else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) theme = 'dark'; } catch (e) { }
-            applyTheme(theme);
-        }
-
-        function applyTheme(theme) {
-            document.documentElement.setAttribute('data-theme', theme);
-            const icon = document.getElementById('themeIcon');
-            if (icon) icon.textContent = theme === 'dark' ? '☀️' : '🌙';
-        }
-
-        function toggleTheme() {
-            const current = document.documentElement.getAttribute('data-theme');
-            const next = current === 'dark' ? 'light' : 'dark';
-            applyTheme(next);
-            try { localStorage.setItem('nmt-theme', next); } catch (e) { }
-        }
-
-        function populateFilters() {
-            const sectionFilter = document.getElementById('sectionFilter');
-            const subjectFilter = document.getElementById('subjectFilter');
-            sections.forEach(s => { const o = document.createElement('option'); o.value = s; o.textContent = s; sectionFilter.appendChild(o); });
-            subjects.forEach(s => { const o = document.createElement('option'); o.value = s; o.textContent = s; subjectFilter.appendChild(o); });
-        }
-
-        function renderResources() {
-            const grid = document.getElementById('resourcesGrid');
-            const noResults = document.getElementById('noResults');
-            const resultsCount = document.getElementById('resultsCount');
-            const sorted = [...filteredResources].sort((a, b) => a.section.localeCompare(b.section));
-            grid.innerHTML = '';
-            if (sorted.length === 0) { grid.style.display = 'none'; noResults.style.display = 'block'; }
-            else {
-                grid.style.display = 'grid';
-                noResults.style.display = 'none';
-                sorted.forEach(r => grid.appendChild(createResourceCard(r)));
-                if (window.observeAnimatedElements) window.observeAnimatedElements(grid);
-            }
-            resultsCount.textContent = `Показано ${sorted.length} з ${resources.length} ресурсів`;
-        }
-
-        function createResourceCard(r) {
-            const card = document.createElement('article');
-            card.className = 'resource-card';
-            const isFav = favorites.includes(r.id);
-            const hasLinks = r.additional_links.length > 0;
-            card.innerHTML = `
-        <div class="section-badge" style="background-color: ${r.color};">${r.section_short}</div>
-        <button class="favorite-btn ${isFav ? 'active' : ''}" data-id="${r.id}" title="${isFav ? 'Видалити з улюблених' : 'Додати до улюблених'}" aria-pressed="${isFav}"><span aria-hidden="true">${isFav ? '⭐' : '☆'}</span></button>
-        <div class="resource-icon" aria-hidden="true">${r.icon}</div>
-        <h3 class="resource-title">${r.title}</h3>
-        <p class="resource-category">${r.category}</p>
-        <p class="resource-description">${r.description}</p>
-        <div class="resource-meta">
-          <div class="resource-meta-item"><span class="meta-label">📚 Предмети:</span><div class="meta-value subjects-tags">${r.subjects.map(s => `<span class="subject-tag">#${s}</span>`).join('')}</div></div>
-          <div class="resource-meta-item"><span class="meta-label">📝 Формат:</span><span class="meta-value">${r.format.join(', ')}</span></div>
-        </div>
-        <div class="resource-actions">
-          <a href="${r.primary_link}" target="_blank" rel="noopener noreferrer" class="btn btn--primary">Перейти до ресурсу</a>
-          ${hasLinks ? `<button class="btn btn--secondary toggle-links" data-id="${r.id}">Додаткові посилання (${r.additional_links.length})</button><div class="additional-links" id="links-${r.id}">${r.additional_links.map(l => `<a href="${l.url}" target="_blank" rel="noopener noreferrer" class="additional-link">→ ${l.title}</a>`).join('')}</div>` : ''}
-        </div>`;
-            return card;
-        }
-
-        function attachEventListeners() {
-            document.getElementById('searchInput').addEventListener('input', applyFilters);
-            document.getElementById('sectionFilter').addEventListener('change', applyFilters);
-            document.getElementById('subjectFilter').addEventListener('change', applyFilters);
-            document.getElementById('favoritesFilter').addEventListener('click', toggleFavoritesFilter);
-            document.getElementById('clearFilters').addEventListener('click', resetFilters);
-            document.getElementById('themeToggle').addEventListener('click', toggleTheme);
-            document.getElementById('resourcesGrid').addEventListener('click', handleCardActions);
-        }
-
-        function toggleFavoritesFilter() {
-            onlyFavorites = !onlyFavorites;
-            const btn = document.getElementById('favoritesFilter');
-            btn.classList.toggle('active', onlyFavorites);
-            btn.setAttribute('aria-pressed', onlyFavorites);
-            applyFilters();
-        }
-
-        function applyFilters() {
-            const search = document.getElementById('searchInput').value.toLowerCase();
-            const section = document.getElementById('sectionFilter').value;
-            const subject = document.getElementById('subjectFilter').value;
-            filteredResources = resources.filter(r => {
-                const matchSearch = !search || r.title.toLowerCase().includes(search) || r.description.toLowerCase().includes(search);
-                const matchSection = !section || r.section === section;
-                const matchSubject = !subject || r.subjects.includes(subject) || r.subjects.includes('Всі предмети');
-                const matchFav = !onlyFavorites || favorites.includes(r.id);
-                return matchSearch && matchSection && matchSubject && matchFav;
-            });
-            renderResources();
-        }
-
-        function resetFilters() {
-            document.getElementById('searchInput').value = '';
-            document.getElementById('sectionFilter').value = '';
-            document.getElementById('subjectFilter').value = '';
-            onlyFavorites = false;
-            const favBtn = document.getElementById('favoritesFilter');
-            if (favBtn) {
-                favBtn.classList.remove('active');
-                favBtn.setAttribute('aria-pressed', 'false');
-            }
-            applyFilters();
-        }
-
-        function handleCardActions(e) {
-            if (e.target.classList.contains('toggle-links')) {
-                const id = e.target.getAttribute('data-id');
-                const links = document.getElementById(`links-${id}`);
-                links.classList.toggle('active');
-                e.target.textContent = links.classList.contains('active') ? 'Приховати' : `Додаткові посилання (${links.children.length})`;
-            }
-            if (e.target.classList.contains('favorite-btn') || e.target.closest('.favorite-btn')) {
-                const btn = e.target.classList.contains('favorite-btn') ? e.target : e.target.closest('.favorite-btn');
-                const id = parseInt(btn.getAttribute('data-id'));
-                const idx = favorites.indexOf(id);
-                if (idx === -1) favorites.push(id); else favorites.splice(idx, 1);
-                const isFav = idx === -1;
-                btn.classList.toggle('active', isFav);
-                btn.setAttribute('aria-pressed', isFav);
-                btn.querySelector('span').textContent = isFav ? '⭐' : '☆';
-                saveFavorites();
-                if (onlyFavorites) applyFilters();
-            }
-        }
-
-        init();
     </script>
-    <script src="animations.js"></script>
+    <script src="script.js?v=20261123"></script>
+    <script src="animations.js?v=20261123"></script>
+    <script>
+        window.initResourcesCatalog({
+            resources,
+            subjects,
+            storageKey: 'nmt-favorites-teachers'
+        });
+    </script>
 </body>
 
 </html>

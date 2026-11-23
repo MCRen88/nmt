@@ -47,7 +47,10 @@
             </div>
             <div class="filters-actions">
                 <span class="results-count" id="resultsCount" aria-live="polite">Завантаження...</span>
-                <button class="btn btn--secondary btn--sm" id="clearFilters">Очистити фільтри</button>
+                <div class="filters-buttons">
+                    <button class="btn btn--secondary btn--sm btn--fav-filter" id="favoritesFilter" aria-pressed="false">⭐ Улюблені</button>
+                    <button class="btn btn--secondary btn--sm" id="clearFilters">Очистити фільтри</button>
+                </div>
             </div>
         </div>
     </nav>
@@ -72,7 +75,7 @@
         // Based on Excel "Для кого" column - all resources where "Вчителі" is mentioned
         const resources = [
             // 1. ОФІЦІЙНІ (1-2, 5-18)
-            { id: 1, title: "Тренувальне онлайнове тестування (ТОЛТ)", section: "1. ОФІЦІЙНІ РЕСУРСИ УЦОЯО", section_short: "Офіційні", category: "1.1. Обов'язкові для всіх", primary_link: "https://testportal.gov.ua/nmt-2025-na-dopomogu-uchasnykam-trenuvalni-testy/", additional_links: [{ title: "Альтернативне посилання", url: "https://lv.testportal.gov.ua" }, { title: "Офіційний сайт УЦОЯО", url: "https://testportal.gov.ua" }], subjects: ["Математика", "Українська мова", "Історія України", "Англійська мова", "Біологія", "Фізика", "Хімія", "Географія"], description: "Офіційна платформа УЦОЯО з реальними завданнями НМТ 2024-2026. Тематичні та підсумкові тести.", format: ["Онлайн-тести"], color: "#0066CC", icon: "🎯" },
+            { id: 1, title: "Тренувальне онлайнове тестування (ТОЛТ)", section: "1. ОФІЦІЙНІ РЕСУРСИ УЦОЯО", section_short: "Офіційні", category: "1.1. Обов'язкові для всіх", primary_link: "https://testportal.gov.ua/nmt-2025-na-dopomogu-uchasnykam-trenuvalni-testy/", additional_links: [{ title: "Альтернативне посилання", url: "https://lv.testportal.gov.ua" }, { title: "Офіційний сайт УЦОЯО", url: "https://testportal.gov.ua" }], subjects: ["Всі предмети"], description: "Офіційна платформа УЦОЯО з реальними завданнями НМТ 2024-2026. Тематичні та підсумкові тести.", format: ["Онлайн-тести"], color: "#0066CC", icon: "🎯" },
             { id: 2, title: "Офіційний портал УЦОЯО", section: "1. ОФІЦІЙНІ РЕСУРСИ УЦОЯО", section_short: "Офіційні", category: "1.1. Обов'язкові для всіх", primary_link: "https://testportal.gov.ua", additional_links: [{ title: "НМТ розділ", url: "https://testportal.gov.ua/skladnyky-nmt-2026/" }, { title: "Підготовка до НМТ", url: "https://testportal.gov.ua/pidgotovka-do-nmt-2026/" }, { title: "Запитання-відповіді", url: "https://testportal.gov.ua/zapytannya-vidpovidi-nmt/" }], subjects: ["Всі предмети"], description: "Єдине офіційне джерело інформації про НМТ. Програми, демоваріанти, архів тестів 2007-2024.", format: ["Веб-портал"], color: "#0066CC", icon: "📋" },
             { id: 5, title: "Архів тестів ЗНО/НМТ (2007-2024)", section: "1. ОФІЦІЙНІ РЕСУРСИ УЦОЯО", section_short: "Офіційні", category: "1.1. Обов'язкові для всіх", primary_link: "https://testportal.gov.ua/testy-mynulyh-rokiv/", additional_links: [], subjects: ["Всі предмети"], description: "Повні варіанти тестів усіх років для завантаження та друку.", format: ["PDF файли"], color: "#0066CC", icon: "📚" },
             { id: 6, title: "Демонстраційні варіанти НМТ-2026", section: "1. ОФІЦІЙНІ РЕСУРСИ УЦОЯО", section_short: "Офіційні", category: "1.1. Обов'язкові для всіх", primary_link: "https://lv.testportal.gov.ua/?page_id=2192", additional_links: [{ title: "На ВШО платформі", url: "https://lms.e-school.net.ua/courses/course-v1:uceqe+nmt_demo_2025+2025-01/course/" }], subjects: ["Всі предмети"], description: "Офіційні демоваріанти НМТ-2026 з розв'язками та поясненнями.", format: ["Онлайн + PDF"], color: "#0066CC", icon: "🔍" },
@@ -109,6 +112,7 @@
 
         let filteredResources = [...resources];
         let favorites = [];
+        let onlyFavorites = false;
 
         function init() {
             loadFavorites();
@@ -159,7 +163,12 @@
             const sorted = [...filteredResources].sort((a, b) => a.section.localeCompare(b.section));
             grid.innerHTML = '';
             if (sorted.length === 0) { grid.style.display = 'none'; noResults.style.display = 'block'; }
-            else { grid.style.display = 'grid'; noResults.style.display = 'none'; sorted.forEach(r => grid.appendChild(createResourceCard(r))); }
+            else {
+                grid.style.display = 'grid';
+                noResults.style.display = 'none';
+                sorted.forEach(r => grid.appendChild(createResourceCard(r)));
+                if (window.observeAnimatedElements) window.observeAnimatedElements(grid);
+            }
             resultsCount.textContent = `Показано ${sorted.length} з ${resources.length} ресурсів`;
         }
 
@@ -190,9 +199,18 @@
             document.getElementById('searchInput').addEventListener('input', applyFilters);
             document.getElementById('sectionFilter').addEventListener('change', applyFilters);
             document.getElementById('subjectFilter').addEventListener('change', applyFilters);
+            document.getElementById('favoritesFilter').addEventListener('click', toggleFavoritesFilter);
             document.getElementById('clearFilters').addEventListener('click', resetFilters);
             document.getElementById('themeToggle').addEventListener('click', toggleTheme);
             document.getElementById('resourcesGrid').addEventListener('click', handleCardActions);
+        }
+
+        function toggleFavoritesFilter() {
+            onlyFavorites = !onlyFavorites;
+            const btn = document.getElementById('favoritesFilter');
+            btn.classList.toggle('active', onlyFavorites);
+            btn.setAttribute('aria-pressed', onlyFavorites);
+            applyFilters();
         }
 
         function applyFilters() {
@@ -203,7 +221,8 @@
                 const matchSearch = !search || r.title.toLowerCase().includes(search) || r.description.toLowerCase().includes(search);
                 const matchSection = !section || r.section === section;
                 const matchSubject = !subject || r.subjects.includes(subject) || r.subjects.includes('Всі предмети');
-                return matchSearch && matchSection && matchSubject;
+                const matchFav = !onlyFavorites || favorites.includes(r.id);
+                return matchSearch && matchSection && matchSubject && matchFav;
             });
             renderResources();
         }
@@ -212,6 +231,12 @@
             document.getElementById('searchInput').value = '';
             document.getElementById('sectionFilter').value = '';
             document.getElementById('subjectFilter').value = '';
+            onlyFavorites = false;
+            const favBtn = document.getElementById('favoritesFilter');
+            if (favBtn) {
+                favBtn.classList.remove('active');
+                favBtn.setAttribute('aria-pressed', 'false');
+            }
             applyFilters();
         }
 
@@ -232,6 +257,7 @@
                 btn.setAttribute('aria-pressed', isFav);
                 btn.querySelector('span').textContent = isFav ? '⭐' : '☆';
                 saveFavorites();
+                if (onlyFavorites) applyFilters();
             }
         }
 

@@ -23,14 +23,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const observer = new IntersectionObserver(animateOnScroll, observerOptions);
 
-    // Target elements to animate
-    const animatedElements = document.querySelectorAll('.animate-on-scroll, .resource-card, .nav-card, .info-card, .section-title');
+    window.observeAnimatedElements = (root = document) => {
+        const animatedElements = root.querySelectorAll('.animate-on-scroll, .resource-card, .nav-card, .info-card, .section-title');
+        animatedElements.forEach((el) => {
+            if (!el.classList.contains('visible')) {
+                el.classList.add('fade-up-element');
+                observer.observe(el);
+            }
+        });
+    };
 
-    animatedElements.forEach((el, index) => {
-        // Add minimal delay for staggered effect on siblings if needed, or just standard class
-        el.classList.add('fade-up-element');
-        observer.observe(el);
-    });
+    window.observeAnimatedElements();
 
     // Parallax effect for header (subtle)
     const header = document.querySelector('.header');
